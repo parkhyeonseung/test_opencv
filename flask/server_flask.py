@@ -27,6 +27,7 @@ def stream_gen(cap):
                 frame = buffer.tobytes()
                 yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') 
         except KeyboardInterrupt:
+            cap.realease()
             break
         except :
             pass
