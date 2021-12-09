@@ -7,16 +7,16 @@ from camera import gstreamer_pipeline
 
 app = Flask(__name__)
 # cap = cv2.VideoCapture(gstreamer_pipeline(),cv2.CAP_GSTREAMER)
-cap = cv2.VideoCapture(0)
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route("/video_feed")
 def video_feed():
-    return Response(stream_gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(stream_gen(cv2.VideoCapture(0)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-def stream_gen():
+def stream_gen(cap):
     while True:
         success, frame = cap.read()  # read the camera frame
         if not success:
