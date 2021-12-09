@@ -18,14 +18,18 @@ def video_feed():
 
 def stream_gen(cap):
     while True:
-        success, frame = cap.read()  # read the camera frame
-        if not success:
+        try:
+            success, frame = cap.read()  # read the camera frame
+            if not success:
+                break
+            else:
+                ret, buffer = cv2.imencode('turtle.png', frame)
+                frame = buffer.tobytes()
+                yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') 
+        except KeyboardInterrupt:
             break
-        else:
-            ret, buffer = cv2.imencode('turtle.png', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') 
-
+        except :
+            pass
 
 if __name__ == '__main__':
     app.run(host = '0.0.0.0',port = 8000)
