@@ -3,7 +3,6 @@ from flask import request
 from flask import Response
 from flask import render_template
 import cv2
-from camera import gstreamer_pipeline
 
 app = Flask(__name__)
 # cap = cv2.VideoCapture(gstreamer_pipeline(),cv2.CAP_GSTREAMER)
@@ -20,12 +19,13 @@ def stream_gen(cap):
     while True:
         try:
             success, frame = cap.read()  # read the camera frame
+            frame = cv2.resize(frame,(600,600))
             if not success:
                 break
             else:
                 ret, buffer = cv2.imencode('.jpeg', frame)
-                frame = buffer.tobytes()
-                yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') 
+                # frame = buffer.tobytes()
+                yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + bytearray(buffer) + b'\r\n') 
         except KeyboardInterrupt:
             cap.realease()
             break
