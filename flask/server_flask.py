@@ -23,7 +23,7 @@ def stream_gen(cap):
             if not success:
                 break
             else:
-                ret, buffer = cv2.imencode('turtle.png', frame)
+                ret, buffer = cv2.imencode('.jpeg', frame)
                 frame = buffer.tobytes()
                 yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') 
         except KeyboardInterrupt:
